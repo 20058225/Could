@@ -33,6 +33,13 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.1.1.0/24"]
 }
 
+resource "azurerm_subnet" "default" {
+  name                 = "default"
+  resource_group_name  = "B9IS121_group"
+  virtual_network_name = "B9IS121-vnet"
+  address_prefixes     = ["10.1.0.0/24"]
+}
+
 resource "azurerm_network_interface" "nic" {
   name                = "B9IS121-nic"
   location            = "westeurope"
