@@ -22,7 +22,7 @@ data "azurerm_resource_group" "example" {
 resource "azurerm_virtual_network" "vnet" {
   name                = "B9IS121-vnet"
   address_space       = ["10.1.0.0/16"]
-  location            = data.azurerm_resource_group.example.location
+  location            = "westeurope"
   resource_group_name = data.azurerm_resource_group.example.name
 }
 resource "azurerm_subnet" "subnet" {
@@ -34,7 +34,7 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_network_interface" "nic" {
   name                = "B9IS121-nic"
-  location            = data.azurerm_resource_group.example.location
+  location            = "westeurope"
   resource_group_name = data.azurerm_resource_group.example.name
 
   ip_configuration {
@@ -46,8 +46,8 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "B9IS121"
-  resource_group_name = data.azurerm_resource_group.example.name
-  location            = data.azurerm_resource_group.example.location
+  resource_group_name = "B9IS121_group"
+  location            = "westeurope"
   size                = "Standard_B1s"
   admin_username      = "brenda"
 
