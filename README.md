@@ -7,8 +7,8 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/20058225/infra-setup.git
-   cd infra-setup
+   git clone https://github.com/20058225/infra-setup-azure.git
+   cd infra-setup-azure
 
    |- Terraform install and verify 
      ./install_terraform.sh
