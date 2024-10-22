@@ -1,17 +1,29 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"  # Ensure you are using a compatible version
+    }
+  }
+
+  required_version = ">= 1.0.0"
+}
+
 provider "azurerm" {
   features {}
+  subscription_id = "a77c589e-092e-413f-9643-e91ac54cdb6a"  # Replace with your actual subscription ID
 }
 
 # Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "docker-server-rg"
-  location = "East US"
+  location = "westeurope"
 }
 
 # Virtual Network
 resource "azurerm_virtual_network" "vnet" {
   name                = "docker-vnet"
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.1.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 }
@@ -21,12 +33,12 @@ resource "azurerm_subnet" "subnet" {
   name                 = "docker-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = ["10.1.0.0/24"]
 }
 
 # Network Security Group to allow SSH and HTTP (Docker traffic)
 resource "azurerm_network_security_group" "nsg" {
-  name                = "docker-nsg"
+  name                = "B9IS121_group"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
