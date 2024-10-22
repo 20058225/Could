@@ -21,6 +21,14 @@ resource "azurerm_subnet" "example" {
   address_prefixes     = ["10.1.0.0/24"]
 }
 
+resource "azurerm_public_ip" "example" {
+  name                = "B9IS121-ip"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  sku                 = "Standard"
+  allocation_method   = "Static"
+}
+
 resource "azurerm_network_interface" "example" {
   name                = "B9IS121-nic"
   location            = azurerm_resource_group.example.location
@@ -34,24 +42,20 @@ resource "azurerm_network_interface" "example" {
   }
 }
 
-resource "azurerm_public_ip" "example" {
-  name                = "B9IS121-ip"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  sku                 = "Standard"
-  allocation_method   = "Static"
-}
-
 resource "azurerm_linux_virtual_machine" "example" {
   name                = "B9IS121"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
   size                = "Standard_B1s"
-  admin_username      = "erenda"
+  admin_username      = "brenda"
+
+  network_interface_ids = [azurerm_network_interface.example.id]
+
   admin_ssh_key {
-    username   = "erenda"
+    username   = "brenda"
     public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICScR3bhSFsUJxogRNLI/AA9gONuGkqVgiYcrbs9c8wN brenda@DESKTOP-J7I6O7I"
   }
+
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -59,7 +63,7 @@ resource "azurerm_linux_virtual_machine" "example" {
     version   = "latest"
   }
 
-  storage_os_disk {
+  os_disk {
     name              = "B9IS121-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
@@ -73,5 +77,5 @@ output "public_ip_address" {
 }
 
 output "dns_name" {
-  value = azurerm_public_ip.example.dns_name
+  value = azurerm_public_ip.example.dns_settings[0].fqdn
 }
