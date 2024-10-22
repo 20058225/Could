@@ -66,8 +66,7 @@ resource "azurerm_linux_virtual_machine" "example" {
   os_disk {
     name              = "B9IS121-osdisk"
     caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
+    storage_account_type  = "Standard_LRS"
     disk_size_gb      = 30
   }
 }
@@ -77,5 +76,5 @@ output "public_ip_address" {
 }
 
 output "dns_name" {
-  value = azurerm_public_ip.example.dns_settings[0].fqdn
+  value = azurerm_public_ip.example.dns_name
 }
