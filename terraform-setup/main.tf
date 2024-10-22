@@ -1,18 +1,29 @@
-# Provider configuration
-provider "azurerm" {
-  features {}
-  subscription_id = "a77c589e-092e-413f-9643-e91ac54cdb6a"
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
+  }
 }
 
-# Resource group
+provider "azurerm" {
+  features {}
+}
+
+# Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "B9IS121_GROUP"
   location = "westeurope"
 }
 
-# Virtual Network (Optional if already exists)
+# Virtual Network
 resource "azurerm_virtual_network" "vnet" {
-  name                = "B9IS121_vnet"
+  name                = "myVNet"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -20,32 +31,32 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Subnet
 resource "azurerm_subnet" "subnet" {
-  name                 = "default"
+  name                 = "mySubnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+# Public IP
+resource "azurerm_public_ip" "public_ip" {
+  name                = "myPublicIP"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Static"
+}
+
 # Network Interface
 resource "azurerm_network_interface" "nic" {
-  name                = "b9is121565"
+  name                = "myNIC"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnet.id
+    name                          = "myIPConfig"
+    subnet_id                    = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.public_ip.id
   }
-}
-
-# Public IP (Optional)
-resource "azurerm_public_ip" "public_ip" {
-  name                = "B9IS121_public_ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
 }
 
 # Virtual Machine
@@ -54,39 +65,48 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = "Standard_B1s"
+  admin_username      = "brenda"
+
+  admin_ssh_key {
+    username   = "brenda"
+    public_key = file("~/.ssh/id_rsa.pub")  # Ensure this path is correct
+  }
+
   network_interface_ids = [
     azurerm_network_interface.nic.id,
   ]
 
   os_disk {
-    name              = "B9IS121_disk1"
     caching           = "ReadWrite"
-    storage_account_type = "Premium_LRS"
-    disk_size_gb      = 30
+    create_option     = "FromImage"
+    managed_disk_type = "Premium_LRS"
   }
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "24_04-lts"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
     version   = "latest"
   }
 
-  admin_username      = "brenda"
-
-  disable_password_authentication = true
-
-  ssh_keys {
-    path     = "/home/brenda/.ssh/authorized_keys"
-    key_data = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICScR3bhSFsUJxogRNLI/AA9gONuGkqVgiYcrbs9c8wN brenda@DESKTOP-J7I6O7I"
+  # Diagnostics profile
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = "https://<your_storage_account_name>.blob.core.windows.net/"
   }
 }
 
-# Enable boot diagnostics
-resource "azurerm_linux_virtual_machine_extension" "diagnostics" {
-  name                 = "enablevmAccess"
-  virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
-  publisher            = "Microsoft.OSTCExtensions"
-  type                 = "VMAccessForLinux"
-  type_handler_version = "1.5"
+# Output the resource group name
+output "resource_group_name" {
+  value = azurerm_resource_group.rg.name
+}
+
+# Output the virtual machine name
+output "vm_name" {
+  value = azurerm_linux_virtual_machine.vm.name
+}
+
+# Output the public IP address
+output "public_ip" {
+  value = azurerm_public_ip.public_ip.ip_address
 }
