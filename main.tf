@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.0"  # Ensure you are using a compatible version
+      version = "~> 4.0"  
     }
   }
 
@@ -16,7 +16,7 @@ provider "azurerm" {
 
 # Data block to retrieve an existing resource group
 data "azurerm_resource_group" "example" {
-  name = "B9IS121_GROUP"
+  name = "B9IS121_group"
 }
 
 resource "azurerm_virtual_network" "vnet" {
@@ -25,10 +25,11 @@ resource "azurerm_virtual_network" "vnet" {
   location            = "westeurope"
   resource_group_name = "B9IS121_group"
 }
+
 resource "azurerm_subnet" "subnet" {
   name                 = "B9IS121-subnet"
   resource_group_name  = "B9IS121_group"
-  virtual_network_name = "B9IS121_group"
+  virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.1.1.0/24"]
 }
 
@@ -41,7 +42,7 @@ resource "azurerm_network_interface" "nic" {
     name                          = "B9IS121-ipconfig"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
- }
+  }
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
