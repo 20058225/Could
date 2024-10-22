@@ -40,9 +40,8 @@ resource "azurerm_public_ip" "example" {
   allocation_method   = "Static"
   sku                 = "Standard"
 
-  dns_settings {
-    domain_name_label = "mynetwork"
-  }
+  # Directly specify the DNS name here
+  domain_name_label   = "mynetwork"
 }
 
 resource "azurerm_network_interface" "example" {
@@ -87,5 +86,5 @@ resource "azurerm_linux_virtual_machine" "example" {
 }
 
 output "dns_name" {
-  value = azurerm_public_ip.example.dns_settings[0].fqdn
+  value = azurerm_public_ip.example.fqdn
 }
