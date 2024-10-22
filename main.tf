@@ -2,89 +2,112 @@ provider "azurerm" {
   features {}
 }
 
-variable "location" {
-  default = "westeurope"
+# Resource Group
+resource "azurerm_resource_group" "rg" {
+  name     = "docker-server-rg"
+  location = "East US"
 }
 
-variable "vm_size" {
-  default = "Standard_B1s"
+# Virtual Network
+resource "azurerm_virtual_network" "vnet" {
+  name                = "docker-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 }
 
-variable "admin_username" {
-  default = "brenda"
+# Subnet
+resource "azurerm_subnet" "subnet" {
+  name                 = "docker-subnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
 }
 
-resource "azurerm_resource_group" "example" {
-  name     = "B9IS121_group"
-  location = var.location
+# Network Security Group to allow SSH and HTTP (Docker traffic)
+resource "azurerm_network_security_group" "nsg" {
+  name                = "docker-nsg"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  security_rule {
+    name                       = "allow_ssh"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow_http"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
-resource "azurerm_virtual_network" "example" {
-  name                = "B9IS121-vnet"
-  address_space       = ["10.1.0.0/16"]
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+# Public IP Address
+resource "azurerm_public_ip" "public_ip" {
+  name                = "docker-public-ip"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"
 }
 
-resource "azurerm_subnet" "example" {
-  name                 = "B9IS121-subnet"
-  resource_group_name  = azurerm_resource_group.example.name
-  virtual_network_name = azurerm_virtual_network.example.name
-  address_prefixes     = ["10.1.0.0/24"]
-}
-
-resource "azurerm_public_ip" "example" {
-  name                = "B9IS121-ip"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-
-  # Directly specify the DNS name here
-  domain_name_label   = "mynetwork"
-}
-
-resource "azurerm_network_interface" "example" {
-  name                = "B9IS121-nic"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+# Network Interface
+resource "azurerm_network_interface" "nic" {
+  name                = "docker-nic"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "ipconfig1"
-    subnet_id                     = azurerm_subnet.example.id
-    public_ip_address_id         = azurerm_public_ip.example.id
+    name                          = "docker-nic-config"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.public_ip.id
   }
 }
 
-resource "azurerm_linux_virtual_machine" "example" {
-  name                  = "B9IS121"
-  resource_group_name   = azurerm_resource_group.example.name
-  location              = azurerm_resource_group.example.location
-  size                  = var.vm_size
-  admin_username        = var.admin_username
+# Azure Virtual Machine
+resource "azurerm_linux_virtual_machine" "vm" {
+  name                = "docker-vm"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  network_interface_ids = [
+    azurerm_network_interface.nic.id,
+  ]
 
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICScR3bhSFsUJxogRNLI/AA9gONuGkqVgiYcrbs9c8wN brenda@DESKTOP-J7I6O7I"
-  }
-
-  network_interface_ids = [azurerm_network_interface.example.id]
+  size               = "Standard_B1s"
+  admin_username     = "adminuser"
+  admin_password     = "P@ssw0rd123!"
 
   os_disk {
     caching              = "ReadWrite"
-    create_option        = "FromImage"
-    managed_disk_type    = "Premium_LRS"
-    disk_size_gb         = 30
+    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "20.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
+
+  computer_name  = "dockerhost"
+  disable_password_authentication = false
 }
 
-output "dns_name" {
-  value = azurerm_public_ip.example.fqdn
+# Attach NSG to the subnet
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
