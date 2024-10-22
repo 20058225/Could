@@ -23,12 +23,12 @@ resource "azurerm_virtual_network" "vnet" {
   name                = "B9IS121-vnet"
   address_space       = ["10.1.0.0/16"]
   location            = "westeurope"
-  resource_group_name = data.azurerm_resource_group.example.name
+  resource_group_name = "B9IS121_group"
 }
 resource "azurerm_subnet" "subnet" {
   name                 = "B9IS121-subnet"
-  resource_group_name  = data.azurerm_resource_group.example.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = "B9IS121_group"
+  virtual_network_name = "B9IS121_group"
   address_prefixes     = ["10.1.1.0/24"]
 }
 
