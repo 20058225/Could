@@ -75,6 +75,7 @@ output "public_ip_address" {
   value = azurerm_public_ip.example.ip_address
 }
 
-output "dns_name" {
-  value = azurerm_public_ip.example.dns_name
+resource "azurerm_dns_zone" "dns" {
+  name                = var.domain_name
+  resource_group_name = azurerm_resource_group.resource_group.name
 }
