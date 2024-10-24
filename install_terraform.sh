@@ -23,5 +23,7 @@ sudo apt-get install -y terraform
 echo "Verifying the Terraform installation..."
 terraform --version
 
+rm LICENSE.txt
+rm terraform_1.9.8_linux_amd64.zip
 # Installation complete
 echo "Terraform installation complete."
