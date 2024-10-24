@@ -11,13 +11,7 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
    3. Access by URL and code to authenticate   
       ```https://microsoft.com/devicelogin ```
    4. Update Package List   
-      ```sudo apt-get update```
-   5. Install the Packages   
-      ```sudo apt-get install -y gnupg software-properties-common curl```
-   6. Verify Installation   
-      ```gpg --version```   
-      ```apt-cache policy software-properties-common```   
-      ```curl --version```
+      ```sudo apt update && sudo apt upgrade -y```
       
 ## Clone this repository:
    ```git clone https://github.com/20058225/infra-setup-azure.git```   
@@ -33,11 +27,10 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
          (optional) ```terraform validate```
       4. ```terraform plan```   
       5. ```terraform apply```   
-   - Ansible install and verify -> in process
+   - Ansible install and verify 
       1. ```./install_ansible.sh```   
       2. ```ansible --version```   
-      3. ```???```            
-   - Docker install and verify
+   - Docker install and verify -> in progress
       1. ```./install_docker.sh```   
       1. ```docker --version```   
       3. ```???```   
