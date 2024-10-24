@@ -11,11 +11,11 @@ echo "Latest version: $LATEST_VERSION"
 
 # Download Terraform
 echo "Downloading Terraform..."
-curl -O https://releases.hashicorp.com/terraform/${LATEST_VERSION}/terraform_${LATEST_VERSION}_linux_amd64.zip
+curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 # Unzip the Terraform package
 echo "Unzipping Terraform..."
-unzip terraform_${LATEST_VERSION}_linux_amd64.zip
+unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 # Move Terraform to /usr/local/bin
 echo "Installing Terraform..."
@@ -27,5 +27,5 @@ terraform --version
 
 # Clean up
 echo "Cleaning up..."
-rm terraform_${LATEST_VERSION}_linux_amd64.zip
+rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 echo "Terraform installation complete."
