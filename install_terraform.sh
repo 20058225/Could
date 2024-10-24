@@ -6,9 +6,10 @@ sudo apt-get update
 sudo apt-get install -y gnupg software-properties-common curl unzip
 
 # Add HashiCorp GPG key and repo
-echo "Adding HashiCorp GPG key and repository..."
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
+unzip terraform_1.9.8_linux_amd64.zip
+sudo mv terraform /usr/local/bin/
+
 
 # Update package lists
 echo "Updating package lists..."
