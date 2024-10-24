@@ -17,8 +17,8 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
    ```git clone https://github.com/20058225/infra-setup-azure.git```   
    ```cd infra-setup-azure```
    
-   ### Make the script executable by giving it the correct permissions. 
-      chmod +x install_terraform.sh install_ansible.sh install_docker.sh
+   ### Make the script executable by giving it the correct permissions.   
+   ```chmod +x install_terraform.sh install_ansible.sh install_docker.sh```   
 
    - Terraform install and verify
       1. ```./install_terraform.sh```   
