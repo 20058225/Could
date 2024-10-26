@@ -1,6 +1,6 @@
 # install_docker.yml
 - name: Install Docker on VM
-  hosts: docker_hosts
+  hosts: hosts
   become: true
   tasks:
     - name: Update apt packages
