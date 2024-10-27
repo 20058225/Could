@@ -1,9 +1,5 @@
-# install_docker.yml
 - name: Install Docker on VM
-  hosts: 
-      hosts:
-    13.94.249.107:
-      ansible_user: brenda
+  hosts: hosts
   become: true
   tasks:
     - name: Update apt packages
