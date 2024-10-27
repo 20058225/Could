@@ -1,11 +1,10 @@
 - name: Install Docker on VM
-  hosts: hosts
+  hosts: 13.94.249.107
   become: true
   tasks:
     - name: Update apt packages
       apt:
         update_cache: yes
-
     - name: Install prerequisites
       apt:
         name:
