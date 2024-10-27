@@ -22,8 +22,8 @@ echo "Setting Up the Python Virtual Environment in progress..."
   # Creating and activating a virtual environment keeps the Ansible installation isolated from the system Python, reducing potential conflicts.
 
 # Testing Ansible with an Inventory and Playbook
+cd ansible
 echo "Testing Ansible with an Inventory and Playbook in progress..."
   ansible all -i inventory -m ping
-  cd ansible
   ansible-playbook -i inventory install_docker.yml
 
