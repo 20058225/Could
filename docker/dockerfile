@@ -1,20 +1,15 @@
-# Use the Node.js 18 image as the base
-FROM node:18
+# Build Stage
+FROM node:23-alpine AS builder
 
-# Set working directory
 WORKDIR /app
+COPY package.json /app/
+RUN npm install --only=production
 
-# Copy package.json and package-lock.json files
-COPY package*.json ./
+# Copy source files after installing dependencies
+COPY src /app/
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application files
-COPY . .
-
-# Expose port (match with the port your app listens on)
+# Expose the application port
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
