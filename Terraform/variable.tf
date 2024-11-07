@@ -21,8 +21,11 @@ variable "private_ip" {
 variable "private_key_path" {
   description = "Path to SSH private key"
   type        = string
+  default     = "/home/useradmin/.ssh/id_rsa"
 }
 variable "public_key_path" {
   description = "Path to SSH public key"
   type        = string
+  default     = "/home/useradmin/.ssh/id_rsa.pub"
 }
+
