@@ -26,13 +26,7 @@ echo "Setting Up the Python Virtual Environment in progress..."
 echo "Verifying the Ansible Installation..."
   ansible --version
 
-# create files required for Ansible run
- touch inventory.ini #pull it from Github?
- touch docker_install.yml #pull it from Github?
-
 # Runing Ansible with an Inventory and Playbook
-cd ansible
 echo "Runing Ansible with an Inventory and Playbook in progress..."
   ansible all -i inventory -m ping
   ansible-playbook -i inventory.ini install_docker.yml
-

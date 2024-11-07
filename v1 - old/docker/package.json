@@ -1,6 +1,6 @@
 {
-    "name": "express-docker",
-    "version": "1.0",
+    "name": "express",
+    "version": "1.0.0",
     "dependencies": {
         "express": "^4.21.1"
     },
