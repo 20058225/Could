@@ -18,7 +18,7 @@ variable "private_ip" {
   type        = string
   default     = "10.1.0.4"
 }
-variable "public_key_path" {
-  description = "Path to SSH public key"
+variable "private_key_path" {
+  description = "Path to SSH private key"
   type        = string
 }
