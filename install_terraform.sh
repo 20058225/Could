@@ -6,8 +6,8 @@ sudo apt-get update
 sudo apt-get install -y gnupg software-properties-common curl unzip
 
 # Add HashiCorp GPG key and repo
-wget https://releases.hashicorp.com/terraform/1.9.7/terraform_1.9.7_linux_amd64.zip
-unzip terraform_1.9.7_linux_amd64.zip
+wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
+unzip terraform_1.9.8_linux_amd64.zip
 sudo mv terraform /usr/local/bin/
 
 
@@ -25,12 +25,12 @@ terraform --version
 
 # removing files
 rm LICENSE.txt
-rm terraform_1.9.7_linux_amd64.zip
+rm terraform_1.9.8_linux_amd64.zip
 # Installation complete
 echo "Terraform installation complete."
 
 # Access to folder terraform and command init
-cd terraform
+cd Terraform
 terraform init
 
 # Validation of terraform files and planning
