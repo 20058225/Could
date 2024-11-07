@@ -2,11 +2,6 @@
 
 # Create a new directory for the application and install node.js
 
-# Create and Access to directory /app/  
-    echo "Create and Access to directory /app/"
-mkdir app
-cd app
-
 # Installing npm and expres
     echo "Installing npm and express"
 sudo apt install npm -y
