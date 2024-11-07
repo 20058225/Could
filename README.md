@@ -18,14 +18,15 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
       
 
 ## Initial Installation
-   1. Install Azure CLI   
-      ```curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash```
-   2. Login   
-      ```az login```
-   3. Access by URL and code to authenticate   
+   1. Make the script executable and run the script
+   ```chmod +x ./initial_intallation.sh```
+      ```./initial_intallation.sh```
+   2. Access by URL and code to authenticate   
       [Device Login](https://microsoft.com/devicelogin)
-   4. Update Package List   
+   3. Update Package List   
       ```sudo apt update && sudo apt upgrade -y```
+      
+
       
 ## Clone this repository:
    ```git clone https://github.com/20058225/infra-setup-azure.git```   

@@ -40,7 +40,6 @@ chmod +x ~/.ssh/id_ed25519.pub
 echo "Terraform planning in progress..."
 terraform plan
 
-
 # Run terraform with ssh
 echo "Terraform applying in progress..."
 terraform apply -var="private_key_path=/home/useradmin/.ssh/id_rsa" -var="public_key_path=/home/useradmin/.ssh/id_rsa.pub" -auto-approve
