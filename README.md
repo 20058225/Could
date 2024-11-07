@@ -36,10 +36,11 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
 
 ## Terraform install and verify
       ./install_terraform.sh
-## Docker install and verify 
-      ./install_docker.sh
 ## Ansible install and verify 
       ./install_ansible.sh
+## Docker install and verify 
+      ./install_docker.sh
+
 
      
          
