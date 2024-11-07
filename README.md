@@ -9,8 +9,10 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
    2. Access your Server VM through your local terminal using SSH
        > [WSL](https://ubuntu.com/desktop/wsl) | PowerShell | Command Prompt       
      ```shh your_user@ServerVM_public_ip``` or ```shh your_user@ServerVM_DNS```      
-   3. Create an SSH Key for the Server VM.   
+   3. Create an SSH Key for the Server VM and insert the local ssh on your new server.
       ```ssh-keygen```
+      cd ./~ssh
+      vi atut
 
 ## Initial Installation
    1. Install Azure CLI   

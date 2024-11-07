@@ -1,3 +1,14 @@
+# Getting ready to install npm
+  echo "Getting ready to install docker"
+
+
+# Getting ready to install docker
+  echo "Getting ready to install docker"
+
+
+
+
+
 # Getting ready to install docker
   echo "Getting ready to install docker"
 sudo apt-get update
