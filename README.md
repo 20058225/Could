@@ -36,6 +36,7 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
 
 ## Terraform install and verify
       ./install_terraform.sh
+      ssh-copy-id -i ~/.ssh/id_ed25519.pub useradmin@your_new_VM
 ## Ansible install and verify 
       ./install_ansible.sh
 ## Docker install and verify 
