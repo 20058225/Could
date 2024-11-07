@@ -1,7 +1,7 @@
 # Build Stage
 FROM node:23
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 COPY package*.json ./
 
 RUN npm install --only=production

@@ -1,5 +1,7 @@
 # install_docker.yml
-- hosts: host
+- name: Install Docker on VM
+  hosts: host
+  become: true
   vars_files:
     - vars.yml
   tasks:
@@ -7,10 +9,6 @@
       debug:
         msg: "The user is {{ ansible_user }}"
 
-- name: Install Docker on VM
-  hosts: host
-  become: true
-  tasks:
     - name: Update apt packages
       apt:
         update_cache: yes
