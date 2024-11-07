@@ -8,7 +8,7 @@
         msg: "The user is {{ ansible_user }}"
 
 - name: Install Docker on VM
-  hosts: docker_hosts
+  hosts: host
   become: true
   tasks:
     - name: Update apt packages
