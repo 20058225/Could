@@ -112,6 +112,21 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
   computer_name  = "AppServer"
   disable_password_authentication = true
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${file(var.public_key_path)} >> ~/.ssh/authorized_keys",
+      "chmod 700 ~/.ssh",
+      "chmod 600 ~/.ssh/authorized_keys"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = file(var.private_key_path)
+      host        = azurerm_linux_virtual_machine.vm.public_ip_address
+    }
+  }
 }
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
   subnet_id                 = azurerm_subnet.subnet.id
