@@ -20,7 +20,7 @@ echo "Setting Up the Python Virtual Environment in progress..."
   sudo apt install python3-venv -y
   python3 -m venv myenv
   source myenv/bin/activate
-  pip install ansible -y
+  pip install ansible
 
 # Verifying Ansible Installation
 echo "Verifying the Ansible Installation..."
@@ -28,5 +28,5 @@ echo "Verifying the Ansible Installation..."
 
 # Runing Ansible with an Inventory and Playbook
 echo "Runing Ansible with an Inventory and Playbook in progress..."
-  ansible all -i inventory -m ping
+  ansible all -i inventory.ini -m ping
   ansible-playbook -i inventory.ini install_docker.yml
