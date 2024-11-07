@@ -11,8 +11,11 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
      ```shh your_user@ServerVM_public_ip``` or ```shh your_user@ServerVM_DNS```      
    3. Create an SSH Key for the Server VM and insert the local ssh on your new server.
       ```ssh-keygen```
-      cd ./~ssh
-      vi atut
+      ```cp ~/.ssh/id_ed25519.pub /path_to_your_terraform_project/id_ed25519.pub```
+      
+      ```ssh-keygen -t rsa -b 2048 -C your_user```
+      ```cp ~/.ssh/id_rsa /path_to_your_terraform_project/id_rsa.pub```
+      
 
 ## Initial Installation
    1. Install Azure CLI   
@@ -40,5 +43,4 @@ This repository contains scripts to install Terraform, Ansible, and Docker on yo
 
      
          
- 
    

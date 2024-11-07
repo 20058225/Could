@@ -95,6 +95,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   ]
   size               = "Standard_B1s"
   admin_username     = var.admin_username
+  
   admin_ssh_key {
     username   = var.admin_username
     public_key = file(var.public_key_path)

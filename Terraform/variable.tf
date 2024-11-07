@@ -1,6 +1,7 @@
 variable "subscription_id" {
   description = "Azure subscription ID"
   type        = string
+  default     = "a77c589e-092e-413f-9643-e91ac54cdb6a"
 }
 variable "location" {
   description = "Azure location"
@@ -20,5 +21,4 @@ variable "private_ip" {
 variable "public_key_path" {
   description = "Path to SSH public key"
   type        = string
-  default     = "~/.ssh/id_ed25519.pub"
 }

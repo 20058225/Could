@@ -36,11 +36,11 @@ terraform init
 # Validation of terraform files and planning
 echo "Terraform validation in progress..."
 terraform validate
-
+chmod +x ~/.ssh/id_ed25519.pub
 echo "Terraform planning in progress..."
 terraform plan
 
 
 # Run terraform with ssh
 echo "Terraform applying in progress..."
-terraform apply -var "public_key_path=~/.ssh/id_rsa.pub"
+terraform apply -var "public_key_path=~/.ssh/id_rsa"
