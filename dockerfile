@@ -1,10 +1,10 @@
 # Build Stage
 FROM node:23
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 COPY package*.json ./
 
-RUN npm install --only=production
+RUN npm install 
 
 # Copy source files after installing dependencies
 COPY server.js ./

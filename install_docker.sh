@@ -1,6 +1,8 @@
 #-----CREATING EXPRESS DOCKER IMAGE--------#
 
 # Create a new directory for the application and install node.js
+mkdir app
+cd app
 
     echo "Git is being installed"
 # Install Git
@@ -11,9 +13,9 @@ sudo apt install git -y
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
     
 sudo apt install -y nodejs
-sudo apt install npm -y
+sudo apt install -y npm
     npm init -y
-    npm install express -y
+    npm install express 
 
 # Running Ansible to automate the image creation and run
     echo "Running Ansible to automate the image creation and run"
@@ -21,7 +23,7 @@ ansible-playbook -i inventory.ini install_express.yml
 
 # Create a docker image and run docker container
     echo "Create a docker image and run docker container"
-docker build -t express
+docker build -t express .
 docker run -p 3000:3000 express
 
 # Container is running
