@@ -16,7 +16,7 @@ sudo apt install -y nodejs
 sudo apt install -y npm
     npm init -y
     npm install express 
-
+cd ..
 # Running Ansible to automate the image creation and run
     echo "Running Ansible to automate the image creation and run"
 ansible-playbook -i inventory.ini install_express.yml
