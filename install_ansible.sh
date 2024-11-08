@@ -29,4 +29,5 @@ echo "Verifying the Ansible Installation..."
 # Runing Ansible with an Inventory and Playbook
 echo "Runing Ansible with an Inventory and Playbook in progress..."
   ansible all -i inventory.ini -m ping host
+  sudo usermod -aG docker useradmin
   ansible-playbook -i inventory.ini install_docker.yml

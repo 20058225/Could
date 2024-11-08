@@ -2,11 +2,18 @@
 
 # Create a new directory for the application and install node.js
 
+    echo "Git is being installed"
+# Install Git
+sudo apt install git -y
+
 # Installing npm and expres
     echo "Installing npm and express"
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    
+sudo apt install -y nodejs
 sudo apt install npm -y
-npm init -y
-npm install express -y
+    npm init -y
+    npm install express -y
 
 # Running Ansible to automate the image creation and run
     echo "Running Ansible to automate the image creation and run"
