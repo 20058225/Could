@@ -11,11 +11,11 @@ With it, you will be able to create your VM and run scripts to
        > [WSL](https://ubuntu.com/desktop/wsl) | PowerShell | Command Prompt       
      ```ssh your_user@ServerVM_public_ip``` or ```ssh your_user@ServerVM_DNS```      
    3. Create an SSH Key for the Server VM and insert the local ssh on your new server.
-      ```ssh-keygen```
-      ```cp ~/.ssh/id_ed25519.pub /path_to_your_terraform_project/id_ed25519.pub```
+      ```ssh-keygen```   
+      ```cp ~/.ssh/id_ed25519.pub /path_to_your_terraform_project/id_ed25519.pub```   
       
-      ```ssh-keygen -t rsa -b 2048 -C your_user```
-      ```cp ~/.ssh/id_rsa /path_to_your_terraform_project/id_rsa.pub```
+      ```ssh-keygen -t rsa -b 2048 -C your_user```      
+      ```cp ~/.ssh/id_rsa /path_to_your_terraform_project/id_rsa.pub```   
       
 ## Initial Installation
    1. Make the script executable and run the script
