@@ -68,6 +68,8 @@ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
 sudo apt update
 sudo apt install -y jenkins
 
+sudo usermod -aG docker jenkins
+
 echo "@@ Checking Jenkins version..."
 jenkins --version
 
@@ -75,7 +77,7 @@ jenkins --version
 echo "@@ Starting Jenkins..."
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
-    sudo usermod -aG docker jenkins
+sudo usermod -aG docker jenkins
 sudo systemctl restart jenkins
 
 # Check Jenkins status
