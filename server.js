@@ -6,6 +6,6 @@ app.get('/', (req, res) => {
     res.send('Dockerizing Node Application');
 });
 
-app.listen(PORT, function() {
-    console.log(`The server is running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', function() {
+    console.log(`The server is running on http://0.0.0.0:${PORT}`);
 });
