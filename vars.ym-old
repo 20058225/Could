@@ -1,3 +1,0 @@
-ansible_user: "useradmin"
-ansible_ssh_private_key_file: "~/.ssh/id_ed25519"
-express_src: "/home/useradmin/infra-setup-azure"

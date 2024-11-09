@@ -32,7 +32,7 @@ pipeline {
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} || true
                         docker stop express || true
                         docker rm express || true
-                        docker run -d --name express -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         EOF
                         """
                     }
