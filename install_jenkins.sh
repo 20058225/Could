@@ -2,7 +2,7 @@
 
 # Updating system
 echo "@@ Updating system..."
-sudo apt update && apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 
 # Creates a memory for swap file
 sudo fallocate -l 4G /swapfile
@@ -26,58 +26,38 @@ echo "@@ Git path set to: $GIT_PATH"
 KNOWN_HOSTS_FILE=~/.ssh/known_hosts
 GITHUB_HOST="github.com"
 SERVER_IP="104.45.38.12"
+mkdir -p ~/.ssh
 
-if ! grep -q "$GITHUB_HOST" "$KNOWN_HOSTS_FILE" 2>/dev/null; then
-    echo "@@ Adding $GITHUB_HOST to known_hosts..."
-    mkdir -p ~/.ssh
-    ssh-keyscan -H $GITHUB_HOST >> "$KNOWN_HOSTS_FILE"
-else
-    echo "@@ $GITHUB_HOST already in known_hosts"
-fi
+for HOST in "$GITHUB_HOST" "$SERVER_IP"; do
+    if ! ssh-keygen -F "$HOST" &>/dev/null; then
+        echo "@@ Adding $HOST to known_hosts..."
+        ssh-keyscan -H "$HOST" >> "$KNOWN_HOSTS_FILE"
+    else
+        echo "@@ $HOST already exists in known_hosts"
+    fi
+done
 
-echo "@@ Adding server key to known_hosts if not present..."
-if ! grep -q "$SERVER_IP" "$KNOWN_HOSTS_FILE"; then
-    ssh-keyscan -H "$SERVER_IP" >> "$KNOWN_HOSTS_FILE"
-    echo "@@ Server key added to known_hosts."
-else
-    echo "@@ Server key already exists in known_hosts."
-fi
-
-# Install Java and verify
+# Install Java
 echo "@@ Installing Java..."
 sudo apt install -y fontconfig openjdk-17-jre
 java -version
 
-# Download and install Jenkins
-echo "@@ Adding Jenkins repository key..."
-sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
-  https://pkg.jenkins.io/debian/jenkins.io-2023.key
-echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
-  https://pkg.jenkins.io/debian binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-
-  echo "@@ Configuring Jenkins repository..."
-echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian-stable binary/" | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-
 # Install Jenkins
-    echo "@@ Installing Jenkins..."
-sudo apt update
-sudo apt install -y jenkins
+echo "@@ Adding Jenkins repository key and installing Jenkins..."
+sudo wget -q -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt update && sudo apt install -y jenkins
 
+# Docker group for Jenkins user
 sudo usermod -aG docker jenkins
 
-echo "@@ Checking Jenkins version..."
-jenkins --version
-
-# Start Jenkins and enable on boot
+# Start and enable Jenkins
 echo "@@ Starting Jenkins..."
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
-sudo usermod -aG docker jenkins
+
+# Restart Jenkins to apply Docker group permissions
+echo "@@ Restarting Jenkins to apply permissions..."
 sudo systemctl restart jenkins
 
 # Check Jenkins status
