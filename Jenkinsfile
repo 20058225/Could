@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Your checkout steps
+                checkout scm
             }
         }
         stage('Build Docker Image on Remote') {
