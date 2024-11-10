@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AZURE_VM_IP = '13.95.14.175'
-        SSH_CREDENTIALS_ID = 'AppServer'  // The ID of the SSH credential you created
+        SSH_CREDENTIALS_ID = 'AppServer'  // The ID of the SSH credential you created on Jenkins
         DOCKER_IMAGE = 'express'
         DOCKER_TAG = 'latest'
     }

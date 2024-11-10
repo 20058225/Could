@@ -43,7 +43,7 @@ sudo apt install -y fontconfig openjdk-17-jre
 java -version
 
 # Install Jenkins
-echo "adding repository key..."
+echo "@@ Adding repository key..."
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian/jenkins.io-2023.key
 echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
@@ -52,15 +52,15 @@ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
 curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
   /usr/share/keyrings/jenkins-keyring.asc > /dev/null
 
-echo "updating list file.."
+echo "@@ Updating list file.."
 echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
   https://pkg.jenkins.io/debian-stable binary/" | sudo tee \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
 
-echo "updating and installing Jenkins..."
+echo "@@ Updating and installing Jenkins..."
 sudo apt update && sudo apt install -y jenkins
 
-echo "checking Jenkins version"
+echo "@@ Checking Jenkins version"
 jenkins --version
 
 # Docker group for Jenkins user

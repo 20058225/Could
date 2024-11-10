@@ -19,8 +19,8 @@ With it, you will be able to create your VM and run scripts to
       
 ## Initial Installation
    1. Make the script executable and run the script
-   ```chmod +x ./initial_intallation.sh```
-      ```./initial_intallation.sh```
+   ```chmod +x ./environment.sh```
+      ```./environment.sh```
    2. Access by URL and code to authenticate Azure Login 
       [Device Login](https://microsoft.com/devicelogin)
    3. Access by URL and code to authenticate DockerHub
@@ -33,7 +33,7 @@ With it, you will be able to create your VM and run scripts to
    ```cd infra-setup-azure```
    
    ### Make the script executable by giving it the correct permissions.   
-   ```chmod +x install_terraform.sh install_ansible.sh install_docker.sh install_jenkins.sh```   
+   ```chmod +x install_terraform.sh install_ansible.sh install_docker.sh setup_jenkins.sh```   
 
 ## Terraform install and verify
 ```./install_terraform.sh```
@@ -43,4 +43,4 @@ With it, you will be able to create your VM and run scripts to
 ## Docker install and verify 
 ```./install_docker.sh```
 ## Jenkins install and verify 
-```./install_jenkins.sh``` 
+```./setup_jenkins.sh``` 
