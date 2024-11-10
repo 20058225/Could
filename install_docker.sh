@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Create a new directory for the application and install node.js
 [ ! -d app ] && mkdir app
 cd app
