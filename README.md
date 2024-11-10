@@ -21,9 +21,11 @@ With it, you will be able to create your VM and run scripts to
    1. Make the script executable and run the script
    ```chmod +x ./initial_intallation.sh```
       ```./initial_intallation.sh```
-   2. Access by URL and code to authenticate   
+   2. Access by URL and code to authenticate Azure Login 
       [Device Login](https://microsoft.com/devicelogin)
-   3. Update Package List   
+   3. Access by URL and code to authenticate DockerHub
+      run ```docker login``` and click on [DockerHub Login](https://login.docker.com/activate)
+   4. Update Package List   
       ```sudo apt update && sudo apt upgrade -y```
             
 ## Clone this repository:
