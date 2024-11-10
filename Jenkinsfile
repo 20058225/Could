@@ -25,15 +25,13 @@ pipeline {
         stage('Pull Docker Image on Remote') {
             steps {
                 sshagent(['AppServer']) {  // Use 'AppServer' for SSH access to the remote client
-                    withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh """
-                            ssh $REMOTE_HOST '
-                            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
-                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
-                            docker logout
-                            '
-                        """
-                    }
+                    sh """
+                        ssh $REMOTE_HOST '
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD &&
+                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                        docker logout
+                        '
+                    """
                 }
             }
         }
