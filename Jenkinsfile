@@ -26,7 +26,7 @@ pipeline {
                     // Use SSH to connect to the Azure VM and run Docker commands to pull and run the container
                     sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
                         sh """
-                        ssh -o useradmin@${AZURE_VM_IP} << EOF
+                        ssh -o StrictHostKeyChecking=no useradmin@${AZURE_VM_IP} << EOF
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} || true
                         docker stop express || true
                         docker rm express || true

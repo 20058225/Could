@@ -2,14 +2,10 @@
 - name: Install Docker on VM
   hosts: host
   become: true
-  vars:
-    useradmin: useradmin
-    ansible_user: useradmin
-    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
   tasks:
     - name: Example task
       debug:
-        msg: "The user is {{ ansible_user }}"
+        msg: "The user is useradmin
 
     - name: Update apt packages
       apt:
@@ -55,7 +51,7 @@
 
     - name: Add user to Docker group
       user:
-        name: "{{ ansible_user }}"
+        name: useradmin
         groups: docker
         append: yes
         
