@@ -1,4 +1,4 @@
-# install_docker.yml
+# setup_docker.yml
 - name: Install Docker on VM
   hosts: host
   become: true

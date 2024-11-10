@@ -1,0 +1,31 @@
+- name: Deploy Express App Docker Container
+  hosts: host
+  become: true
+  vars:
+    useradmin: useradmin
+    ansible_user: useradmin
+    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+    express_src: "/home/{{ useradmin }}/infra-setup-azure/app" 
+  tasks:
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Copy Express files
+      copy:
+        src: "{{ express_src }}"
+        dest: /usr/src/app
+        mode: 0755
+
+    - name: Build Docker image on the server
+      command: docker build -t express /usr/src/app
+
+    - name: Run Docker container for sample app
+      docker_container:
+        name: express
+        image: express
+        state: started
+        ports:
+          - "3000:3000"
