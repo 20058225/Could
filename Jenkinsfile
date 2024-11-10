@@ -1,13 +1,19 @@
 pipeline {
     agent any
     environment {
-        DOCKER_CREDS = sh(script: 'pass show docker-credentials', returnStdout: true).trim()
         REMOTE_HOST = 'useradmin@13.95.14.175'
     }
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+        stage('Retrieve Docker Credentials') {
+            steps {
+                script {
+                    env.DOCKER_CREDS = sh(script: 'pass show docker-credentials', returnStdout: true).trim()
+                }
             }
         }
         stage('Build Docker Image on Remote') {
