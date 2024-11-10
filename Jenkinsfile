@@ -6,7 +6,7 @@ pipeline {
         SSH_CREDENTIALS_ID = 'AppServer'  // The ID of the SSH credential you created on Jenkins
         DOCKER_IMAGE = '20058225/express'
         DOCKER_TAG = 'latest'
-        DOCKERHUB_CREDENTIALS_ID = 'useradmin'
+        //DOCKERHUB_CREDENTIALS_ID = 'useradmin'
     }
     stages {
         stage('Checkout') {
@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Login to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                withCredentials([usernamePassword(credentialsId: "${SSH_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh """
                     echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                     """
