@@ -30,9 +30,9 @@ pipeline {
                         sh """
                         ssh -o StrictHostKeyChecking=no useradmin@${AZURE_VM_IP} << EOF
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} || true
-                        docker stop express-app || true
-                        docker rm express-app || true
-                        docker run -d --name express-app --memory=512m --cpus=0.5 -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker stop express || true
+                        docker rm express || true
+                        docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         EOF
                         """
                     }

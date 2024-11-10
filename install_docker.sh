@@ -30,17 +30,3 @@ docker run -p 3000:3000 express
     echo "Container is running"
 docker ps -a
 docker logs [container ID]
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
