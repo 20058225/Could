@@ -1,7 +1,7 @@
 # Create a new directory for the application and install node.js
 [ ! -d app ] && mkdir app
 cd app
-
+ 
 # Install Git
     echo "@@ Git is being installed"
 sudo apt update && sudo apt install -y git
