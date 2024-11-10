@@ -34,4 +34,3 @@ echo "Install Azure CLI"
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 echo "Login Azure"
 az login
-
