@@ -2,6 +2,10 @@ pipeline {
     agent any
     environment {
         REMOTE_HOST = 'useradmin@13.95.14.175'
+        DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'  // ID for DockerHub credentials
+        SSH_CREDENTIALS_ID = 'AppServer'  // SSH credentials for remote access
+        DOCKER_IMAGE = '20058225/express'
+        DOCKER_TAG = 'latest'
     }
     stages {
         stage('Checkout') {
@@ -9,18 +13,11 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Retrieve Docker Credentials') {
-            steps {
-                script {
-                    env.DOCKER_CREDS = sh(script: 'pass show docker-credentials', returnStdout: true).trim()
-                }
-            }
-        }
         stage('Build Docker Image on Remote') {
             steps {
                 sshagent(['AppServer']) {  // Use 'AppServer' for SSH access to the remote client
                     sh """
-                        ssh $REMOTE_HOST 'docker build -t 20058225/express:latest /path/to/app/on/remote'
+                        ssh $REMOTE_HOST 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} /path/to/app/on/remote'
                     """
                 }
             }
@@ -28,13 +25,15 @@ pipeline {
         stage('Push Docker Image from Remote') {
             steps {
                 sshagent(['AppServer']) {  
-                    sh """
-                        ssh $REMOTE_HOST '
-                            echo "$DOCKER_CREDS" | docker login -u "your-docker-username" --password-stdin &&
-                            docker push 20058225/express:latest &&
-                            docker logout
-                        '
-                    """
+                    withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh """
+                            ssh $REMOTE_HOST '
+                                echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
+                                docker push ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                                docker logout
+                            '
+                        """
+                    }
                 }
             }
         }
