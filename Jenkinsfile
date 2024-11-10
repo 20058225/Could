@@ -3,19 +3,20 @@ pipeline {
 
     environment {
         AZURE_VM_IP = '13.95.14.175'
-        SSH_CREDENTIALS_ID = 'AppServer'  // The ID of the SSH credential you created on Jenkins
-        DOCKER_CREDS = credentials('dockerhub-credentials')
+        SSH_CREDENTIALS_ID = 'AppServer'  // Jenkins SSH credentials ID for Azure VM
+        DOCKER_CREDS = credentials('dockerhub-credentials')  // DockerHub credentials in Jenkins
     }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scm  // Pull code from the SCM repository
             }
         }   
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t 20058225/express:latest .'
+                    sh 'docker build -t 20058225/express:latest .'  // Build Docker image
                 }
             }
         }
@@ -37,7 +38,7 @@ pipeline {
         stage('Deploy to Azure VM') {
             steps {
                 script {
-                    sshagent('AppServer') {
+                    sshagent(['AppServer']) {  // Use SSH credentials to connect to the VM
                         sh """
                         ssh -o StrictHostKeyChecking=no useradmin@13.95.14.175 << EOF
                         docker pull 20058225/express:latest || true
@@ -51,6 +52,7 @@ pipeline {
             }
         }
     }
+    
     post {
         always {
             echo "CI/CD pipeline completed."
