@@ -19,6 +19,21 @@ pipeline {
                 }
             }
         }
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', 
+                                                usernameVariable: 'DOCKER_USER', 
+                                                passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        set +x
+                        echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin || exit 1
+                        set -x
+                        docker push 20058225/express:latest
+                        docker logout
+                    """
+                }
+            }
+        }
         stage('Deploy to Azure VM') {
             steps {
                 script {
