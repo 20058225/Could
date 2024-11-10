@@ -17,8 +17,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh """
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                    """
+                        docker logout || true
+                        echo "${DOCKER_CREDENTIALS_PSW}" | docker login -u "${DOCKER_CREDENTIALS_USR}" --password-stdin                    """
                 }
             }
         }
@@ -27,11 +27,11 @@ pipeline {
                 sshagent(['AppServer']) {  // Use 'AppServer' for SSH access to the remote client
                     withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh """
-                            ssh $REMOTE_HOST '
-                            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
-                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                            ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} "
+                            docker logout || true
+                            echo \\"${DOCKER_CREDENTIALS_PSW}\\" | docker login -u \\"${DOCKER_CREDENTIALS_USR}\\" --password-stdin
+                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
                             docker logout
-                            '
                         """
                     }
                 }
@@ -41,11 +41,10 @@ pipeline {
             steps {
                 sshagent(['AppServer']) {  
                     sh """
-                        ssh $REMOTE_HOST '
-                        docker stop express || true &&
-                        docker rm express || true &&
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} "
+                        docker stop express || true
+                        docker rm express || true
                         docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        '
                     """
                 }
             }
