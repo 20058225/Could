@@ -1,61 +1,41 @@
 pipeline {
     agent any
-
     environment {
-        AZURE_VM_IP = '13.95.14.175'
-        SSH_CREDENTIALS_ID = 'AppServer'  // Jenkins SSH credentials ID for Azure VM
-        DOCKER_CREDS = credentials('dockerhub-credentials')  // DockerHub credentials in Jenkins
+        DOCKER_CREDS = sh(script: 'pass show docker-credentials', returnStdout: true).trim()
+        REMOTE_HOST = 'useradmin@13.95.14.175'
     }
-
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Pull code from the SCM repository
-            }
-        }   
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh 'docker build -t 20058225/express:latest .'  // Build Docker image
-                }
+                // Your checkout steps
             }
         }
-        stage('Push Docker Image') {
+        stage('Build Docker Image on Remote') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', 
-                                                usernameVariable: 'DOCKER_USER', 
-                                                passwordVariable: 'DOCKER_PASS')]) {
+                sshagent(['AppServer']) {  // Use 'AppServer' for SSH access to the remote client
                     sh """
-                        set +x
-                        echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin || exit 1
-                        set -x
-                        docker push 20058225/express:latest
-                        docker logout
+                        ssh $REMOTE_HOST 'docker build -t 20058225/express:latest /path/to/app/on/remote'
                     """
                 }
             }
         }
-        stage('Deploy to Azure VM') {
+        stage('Push Docker Image from Remote') {
             steps {
-                script {
-                    sshagent(['AppServer']) {  // Use SSH credentials to connect to the VM
-                        sh """
-                        ssh -o StrictHostKeyChecking=no useradmin@13.95.14.175 << EOF
-                        docker pull 20058225/express:latest || true
-                        docker stop express || true
-                        docker rm express || true
-                        docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 20058225/express:latest
-                        EOF
-                        """
-                    }
+                sshagent(['AppServer']) {  
+                    sh """
+                        ssh $REMOTE_HOST '
+                            echo "$DOCKER_CREDS" | docker login -u "your-docker-username" --password-stdin &&
+                            docker push 20058225/express:latest &&
+                            docker logout
+                        '
+                    """
                 }
             }
         }
     }
-    
     post {
         always {
-            echo "CI/CD pipeline completed."
+            echo 'CI/CD pipeline completed.'
         }
     }
 }
