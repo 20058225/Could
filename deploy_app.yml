@@ -4,9 +4,9 @@
     ANSIBLE_HOST_KEY_CHECKING: "False"
   tasks:
   - name: Build the Docker image locally
-      command: docker build -t express /home/useradmin/infra-setup-azure
+      command: docker build -t express /home/useradmin/infra-setup-azure/
       args:
-        chdir: /home/useradmin/infra-setup-azure
+        chdir: /home/useradmin/infra-setup-azure/
         
     - name: Run the Docker container for the Express app
       docker_container:
