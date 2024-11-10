@@ -4,8 +4,7 @@ pipeline {
     environment {
         AZURE_VM_IP = '13.95.14.175'
         SSH_CREDENTIALS_ID = 'AppServer'  // The ID of the SSH credential you created on Jenkins
-        DOCKER_IMAGE = '20058225/express'
-        DOCKER_TAG = 'latest'
+        DOCKER_CREDS = credentials('dockerhub-credentials')
     }
     stages {
         stage('Checkout') {
@@ -16,33 +15,31 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh 'docker build -t 20058225/express:latest .'
                 }
             }
         }
         stage('Push Docker Image') {
             steps {
                 script {
-                    sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
-                        sh """
-                        docker login -u $DOCKER_USERNAME --password-stdin
-                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        """
-                    }
+                    sh """
+                    echo \${DOCKER_CREDS_PSW} | docker login -u \${DOCKER_CREDS_USR} --password-stdin
+                    docker push 20058225/express:latest
+                    docker logout
+                    """
                 }
             }
         }
         stage('Deploy to Azure VM') {
             steps {
                 script {
-                    // Use SSH to connect to the Azure VM and run Docker commands to pull and run the container
-                    sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
+                    sshagent('AppServer') {
                         sh """
-                        ssh -o StrictHostKeyChecking=no useradmin@${AZURE_VM_IP} << EOF
-                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} || true
+                        ssh -o StrictHostKeyChecking=no useradmin@13.95.14.175 << EOF
+                        docker pull 20058225/express:latest || true
                         docker stop express || true
                         docker rm express || true
-                        docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 20058225/express:latest
                         EOF
                         """
                     }
