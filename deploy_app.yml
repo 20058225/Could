@@ -1,11 +1,27 @@
 - name: Deploy Express App Docker Container
+  hosts: localhost
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  tasks:
+  - name: Build the Docker image locally
+      command: docker build -t express /home/useradmin/infra-setup-azure
+      args:
+        chdir: /home/useradmin/infra-setup-azure
+        
+    - name: Run the Docker container for the Express app
+      docker_container:
+        name: express
+        image: express
+        state: started
+        ports:
+          - "3000:3000"
+
+    - name: Save the Docker image to a tar file
+      command: docker save -o /home/useradmin/infra-setup-azure/express.tar express
+
+- name: Transfer and deploy Docker container on remote server
   hosts: host
   become: true
-  vars:
-    useradmin: useradmin
-    ansible_user: useradmin
-    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
-    express_src: "/home/{{ useradmin }}/infra-setup-azure/app" 
   tasks:
     - name: Start Docker service
       systemd:
@@ -15,14 +31,14 @@
 
     - name: Copy Express files
       copy:
-        src: "{{ express_src }}"
-        dest: /usr/src/app
-        mode: 0755
+        src: /home/useradmin/infra-setup-azure/express.tar 
+        dest: /home/useradmin/express.tar 
+        mode: '0644'
 
     - name: Build Docker image on the server
-      command: docker build -t express /usr/src/app
+      command: docker load -i /home/useradmin/express.tar 
 
-    - name: Run Docker container for sample app
+    - name: Run Docker container 
       docker_container:
         name: express
         image: express
