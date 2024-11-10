@@ -1,12 +1,12 @@
-- name: Deploy Express App Docker Container
+- name: Build, save, and deploy Docker container to remote server
   hosts: localhost
   environment:
     ANSIBLE_HOST_KEY_CHECKING: "False"
   tasks:
-  - name: Build the Docker image locally
+    - name: Build the Docker image locally
       command: docker build -t express /home/useradmin/infra-setup-azure/
       args:
-        chdir: /home/useradmin/infra-setup-azure/
+        chdir: /home/useradmin/infra-setup-azure/ 
         
     - name: Run the Docker container for the Express app
       docker_container:
@@ -23,22 +23,22 @@
   hosts: host
   become: true
   tasks:
-    - name: Start Docker service
+    - name: Ensure Docker service is running on remote server
       systemd:
         name: docker
         state: started
         enabled: true
 
-    - name: Copy Express files
+    - name: Copy Docker image tar file to remote server
       copy:
-        src: /home/useradmin/infra-setup-azure/express.tar 
-        dest: /home/useradmin/express.tar 
+        src: /home/useradmin/infra-setup-azure/express.tar     # Local path to the .tar file
+        dest: /home/useradmin/express.tar        # Remote destination path
         mode: '0644'
 
-    - name: Build Docker image on the server
-      command: docker load -i /home/useradmin/express.tar 
+    - name: Load Docker image from tar file on remote server
+      command: docker load -i /home/useradmin/express.tar
 
-    - name: Run Docker container 
+    - name: Run the Docker container for the Express app
       docker_container:
         name: express
         image: express
