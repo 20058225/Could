@@ -22,9 +22,9 @@ pipeline {
         }
         stage('Deploy to Azure VM') {
             steps {
-                //script {
+                script {
                     // Use SSH to connect to the Azure VM and run Docker commands to pull and run the container
-                    sshagent(credentials: [SSH_CREDENTIALS_ID]) {
+                    sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
                         sh """
                         ssh -o StrictHostKeyChecking=no useradmin@${AZURE_VM_IP} << EOF
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} || true
@@ -34,7 +34,7 @@ pipeline {
                         EOF
                         """
                     }
-                //}
+                }
             }
         }
     }
