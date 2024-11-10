@@ -17,7 +17,7 @@ pipeline {
             steps {
                 sshagent(['AppServer']) {  // Use 'AppServer' for SSH access to the remote client
                     sh """
-                        ssh $REMOTE_HOST 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} /home/useradmin/'
+                        ssh $REMOTE_HOST 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} /home/useradmin/infra-setup-azure'
                     """
                 }
             }
