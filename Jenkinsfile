@@ -3,7 +3,7 @@ pipeline {
     environment {
         REMOTE_HOST = 'useradmin@13.95.14.175'
         SSH_CREDENTIALS_ID = 'AppServer' // SSH credentials for remote access
-        DOCKER_IMAGE = '20058225/express'
+        DOCKER_IMAGE = 'express'
         DOCKER_TAG = 'latest'
         AZURE_USER = 'useradmin'
         AZURE_VM_IP = '13.95.14.175'
