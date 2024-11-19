@@ -2,10 +2,11 @@ pipeline {
     agent any
     environment {
         REMOTE_HOST = 'useradmin@13.95.14.175'
-        SSH_CREDENTIALS_ID = 'AppServer'  // SSH credentials for remote access
+        SSH_CREDENTIALS_ID = 'AppServer' // SSH credentials for remote access
         DOCKER_IMAGE = '20058225/express'
         DOCKER_TAG = 'latest'
         AZURE_USER = 'useradmin'
+        AZURE_VM_IP = '13.95.14.175'
     }
     stages {
         stage('Checkout') {
@@ -13,16 +14,20 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Buil Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                    sh """
+                    docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
                 }
             }
-        }   
+        }
         stage('Save Docker Image') {
             steps {
-                sh "docker save -o ${DOCKER_IMAGE}.tar ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                sh """
+                docker save -o ${DOCKER_IMAGE}.tar ${DOCKER_IMAGE}:${DOCKER_TAG}
+                """
             }
         }
         stage('Copy to Azure VM') {
