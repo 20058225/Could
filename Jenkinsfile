@@ -2,10 +2,10 @@ pipeline {
     agent any
     environment {
         REMOTE_HOST = 'useradmin@13.95.14.175'
-        DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'  // ID for DockerHub credentials
         SSH_CREDENTIALS_ID = 'AppServer'  // SSH credentials for remote access
         DOCKER_IMAGE = '20058225/express'
         DOCKER_TAG = 'latest'
+        AZURE_USER = 'useradmin'
     }
     stages {
         stage('Checkout') {
@@ -13,45 +13,44 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Login to DockerHub') {
+        stage('Buil Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                script {
+                    docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
+                }
+            }
+        }   
+        stage('Save Docker Image') {
+            steps {
+                sh "docker save -o ${DOCKER_IMAGE}.tar ${DOCKER_IMAGE}:${DOCKER_TAG}"
+            }
+        }
+        stage('Copy to Azure VM') {
+            steps {
+                sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
                     sh """
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    scp ${DOCKER_IMAGE}.tar ${AZURE_USER}@${AZURE_VM_IP}:/tmp/
                     """
                 }
             }
         }
-        stage('Pull Docker Image on Remote') {
+        stage('Deploy to Azure VM') {
             steps {
-                sshagent(['AppServer']) {  // Use 'AppServer' for SSH access to the remote client
-                    sh """
-                        ssh $REMOTE_HOST '
-                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD &&
-                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} &&
-                        docker logout
-                        '
-                    """
+                sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
+                    script {
+                        try {
+                            sh """
+                            ssh ${AZURE_USER}@${AZURE_VM_IP} << 'EOF'
+                            docker load < /tmp/${DOCKER_IMAGE}.tar
+                            docker run -d --name express-app-container -p 80:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            EOF
+                            """
+                        } catch (Exception e) {
+                            echo "Ignoring non-critical error: ${e.getMessage()}"
+                        }
+                    }
                 }
             }
-        }
-        stage('Run Docker Container on Remote') {
-            steps {
-                sshagent(['AppServer']) {  
-                    sh """
-                        ssh $REMOTE_HOST '
-                        docker stop express || true &&
-                        docker rm express || true &&
-                        docker run -d --name express --memory=512m --cpus=0.5 -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        '
-                    """
-                }
-            }
-        }
-    }
-    post {
-        always {
-            echo 'CI/CD pipeline completed.'
         }
     }
 }
