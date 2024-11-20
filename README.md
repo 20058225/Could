@@ -33,14 +33,14 @@ With it, you will be able to create your VM and run scripts to
    ```cd infra-setup-azure```
    
    ### Make the script executable by giving it the correct permissions.   
-   ```chmod +x install_terraform.sh install_ansible.sh install_docker.sh setup_jenkins.sh```   
+   ```chmod +x setup_jenkins.sh install_terraform.sh install_ansible.sh install_docker.sh```   
 
+## Jenkins install and verify 
+```./setup_jenkins.sh``` 
 ## Terraform install and verify
-```./install_terraform.sh```
+```./install_terraform.sh```  
 ```ssh-copy-id -i ~/.ssh/id_ed25519.pub useradmin@your_new_VM```
 ## Ansible install and verify
 ```./install_ansible.sh```
 ## Docker install and verify 
 ```./install_docker.sh```
-## Jenkins install and verify 
-```./setup_jenkins.sh``` 

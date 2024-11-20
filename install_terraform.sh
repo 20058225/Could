@@ -25,6 +25,7 @@ terraform --version
 # removing files
 rm LICENSE.txt
 rm terraform_1.9.8_linux_amd64.zip
+
 # Installation complete
  echo "@@ Terraform installation complete."
 
@@ -42,3 +43,4 @@ terraform plan
 # Run terraform with ssh
  echo "@@ Terraform applying in progress..."
 terraform apply -var="private_key_path=/home/useradmin/.ssh/id_rsa" -var="public_key_path=/home/useradmin/.ssh/id_rsa.pub" -auto-approve
+

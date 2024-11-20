@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        AZURE_VM_IP = '13.95.14.175'
+        AZURE_VM_IP = '13.94.207.0'
         SSH_CREDENTIALS_ID = 'AppServer'  // SSH credentials for remote access
         DOCKER_IMAGE = 'express'
         DOCKER_TAG = 'latest'

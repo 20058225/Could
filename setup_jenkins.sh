@@ -39,7 +39,12 @@ done
 
 # Install Java
 echo "@@ Installing Java..."
-sudo apt install -y fontconfig openjdk-17-jre
+if ! command -v fontconfig openjdk-17-jre &> /dev/null; then
+    echo "@@ Java is required." 
+    sudo apt install -y fontconfig openjdk-17-jre
+else
+    echo "@@ Java is already installed."
+fi
 java -version
 
 # Install Jenkins
@@ -76,4 +81,19 @@ echo "@@ Restarting Jenkins to apply permissions..."
 sudo systemctl restart jenkins
 
 # Check Jenkins status
-sudo systemctl status jenkins
+# sudo systemctl status jenkins
+
+sudo su - jenkins
+ssh-keygen -t ed25519 -C "jenkins@104.45.38.12" -f ~/.ssh/id_ed25519 -N ""
+exit 
+
+ssh useradmin@13.94.207.0
+
+ssh-keygen -t ed25519
+cp ~/.ssh/id_ed25519.pub ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+
+exit
+
+sudo su - jenkins 
+ssh -i ~/.ssh/id_ed25519 jenkins@13.94.207.0

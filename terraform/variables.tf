@@ -28,4 +28,3 @@ variable "public_key_path" {
   type        = string
   default     = "/home/useradmin/.ssh/id_rsa.pub"
 }
-
