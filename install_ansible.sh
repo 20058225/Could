@@ -6,8 +6,9 @@
   sudo apt install -y ansible
 
 # Installing pip
- echo "@@ Installing pip in progress..."
-  sudo apt-get install -y python3-pip
+  curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  python3 get-pip.py --user
+  sudo apt-get install python3-pip
 
 # Shows the python version installed
  echo "@@ Python Version installed"
@@ -29,7 +30,5 @@
  echo "@@ Running Ansible with an Inventory and Playbook in progress..."
   ansible all -i inventory.ini -m ping
   sudo usermod -aG docker useradmin
-  newgrp docker
-  docker ps
   ansible-playbook -i inventory.ini setup_docker.yml
   docker ps
