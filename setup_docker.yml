@@ -1,11 +1,10 @@
-# setup_docker.yml
 - name: Install Docker on VM
   hosts: host
   become: true
   tasks:
     - name: Example task
       debug:
-        msg: "The user is useradmin
+        msg: "The user is useradmin"
 
     - name: Update apt packages
       apt:

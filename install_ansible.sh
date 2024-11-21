@@ -25,8 +25,11 @@
  echo "@@ Verifying the Ansible Installation..."
   ansible --version
 
-# Runing Ansible with an Inventory and Playbook
- echo "@@ Runing Ansible with an Inventory and Playbook in progress..."
+# Running Ansible with an Inventory and Playbook
+ echo "@@ Running Ansible with an Inventory and Playbook in progress..."
   ansible all -i inventory.ini -m ping
   sudo usermod -aG docker useradmin
+  newgrp docker
+  docker ps
   ansible-playbook -i inventory.ini setup_docker.yml
+  docker ps
